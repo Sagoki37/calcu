@@ -1,0 +1,192 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class RegistroVisitasConPotencia {
+
+    static Scanner sc = new Scanner(System.in);
+    static int[] tiemposEstadia = new int[7]; // máximo 7 visitas
+    static short totalVisitas = 0;
+    static int acumuladorMinutos = 0;
+
+    public static void main(String[] args) {
+
+        // Datos personales del visitante
+        int cedula = leerEntero("Ingrese su número de cédula (int):");
+        byte edad = leerByte("Ingrese su edad (byte):");
+        long telefono = leerLong("Ingrese su número de teléfono (long):");
+        char genero = leerChar("Ingrese su género (char):");
+        boolean tieneCita = leerBoolean("¿Tiene cita previa? (true/false):");
+        float temperatura = leerFloat("Ingrese su temperatura corporal (float):");
+        double latitud = leerDouble("Ingrese latitud de ubicación (double):");
+
+        // Menú principal
+        int opcion;
+        do {
+            mostrarMenu();
+            opcion = leerEntero("Seleccione una opción:");
+
+            switch (opcion) {
+                case 1:
+                    registrarVisita();
+                    break;
+                case 2:
+                    mostrarEstadisticas(cedula, edad, telefono, genero, tieneCita, temperatura, latitud);
+                    break;
+                case 3:
+                    calcularPotenciaDesdeTeclado();
+                    break;
+                case 4:
+                    System.out.println("👋 Saliendo del programa.");
+                    break;
+                default:
+                    System.out.println("⚠️ Opción inválida.");
+            }
+        } while (opcion != 4);
+    }
+
+    // ======= Métodos de entrada con validación =======
+    public static int leerEntero(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje + " ");
+                return sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("⚠️ Ingrese un número entero válido.");
+                sc.next();
+            }
+        }
+    }
+
+    public static byte leerByte(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje + " ");
+                return sc.nextByte();
+            } catch (InputMismatchException e) {
+                System.out.println("⚠️ Ingrese un número byte válido.");
+                sc.next();
+            }
+        }
+    }
+
+    public static long leerLong(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje + " ");
+                return sc.nextLong();
+            } catch (InputMismatchException e) {
+                System.out.println("⚠️ Ingrese un número long válido.");
+                sc.next();
+            }
+        }
+    }
+
+    public static float leerFloat(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje + " ");
+                return sc.nextFloat();
+            } catch (InputMismatchException e) {
+                System.out.println("⚠️ Ingrese un número float válido.");
+                sc.next();
+            }
+        }
+    }
+
+    public static double leerDouble(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje + " ");
+                return sc.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("⚠️ Ingrese un número double válido.");
+                sc.next();
+            }
+        }
+    }
+
+    public static char leerChar(String mensaje) {
+        System.out.print(mensaje + " ");
+        return sc.next().charAt(0);
+    }
+
+    public static boolean leerBoolean(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje + " ");
+                return sc.nextBoolean();
+            } catch (InputMismatchException e) {
+                System.out.println("⚠️ Ingrese true o false.");
+                sc.next();
+            }
+        }
+    }
+
+    // ======= Métodos funcionales =======
+    public static void mostrarMenu() {
+        System.out.println("\n=== Menú de Opciones ===");
+        System.out.println("1. Registrar nueva visita");
+        System.out.println("2. Mostrar estadísticas");
+        System.out.println("3. Calcular potencia (recursivo)");
+        System.out.println("4. Salir");
+    }
+
+    public static void registrarVisita() {
+        if (totalVisitas >= 7) {
+            System.out.println("⚠️ Límite de visitas alcanzado.");
+            return;
+        }
+
+        short depa = leerByte("Ingrese el número del departamento (short):");
+        byte piso = leerByte("Ingrese el piso (byte):");
+        int tiempo = leerEntero("Ingrese el tiempo de estadía en minutos (int):");
+
+        tiemposEstadia[totalVisitas] = tiempo;
+        acumuladorMinutos += tiempo;
+        totalVisitas++;
+
+        System.out.println("✅ Visita registrada.");
+    }
+
+    public static void mostrarEstadisticas(int cedula, byte edad, long telefono, char genero,
+                                           boolean tieneCita, float temperatura, double latitud) {
+        if (totalVisitas == 0) {
+            System.out.println("⚠️ Aún no se han registrado visitas.");
+            return;
+        }
+
+        float promedio = (float) acumuladorMinutos / totalVisitas;
+        boolean mayorEdad = edad >= 18;
+
+        System.out.println("\n📊 Estadísticas del Visitante:");
+        System.out.println("Cédula: " + cedula);
+        System.out.println("Edad: " + edad + (mayorEdad ? " (Mayor de edad)" : " (Menor de edad)"));
+        System.out.println("Teléfono: " + telefono);
+        System.out.println("Género: " + genero);
+        System.out.println("Temperatura: " + temperatura + "°C");
+        System.out.println("Cita previa: " + (tieneCita ? "Sí" : "No"));
+        System.out.println("Latitud: " + latitud);
+        System.out.println("Visitas: " + totalVisitas);
+        for (int i = 0; i < totalVisitas; i++) {
+            System.out.println("  Día " + (i + 1) + ": " + tiemposEstadia[i] + " min");
+        }
+        System.out.printf("Promedio de estadía: %.2f min\n", promedio);
+    }
+
+    public static void calcularPotenciaDesdeTeclado() {
+        int base = leerEntero("Ingrese la base (int):");
+        int exponente = leerEntero("Ingrese el exponente (int):");
+
+        long resultado = potenciaRecursiva(base, exponente);
+        System.out.println("🔢 Resultado: " + base + "^" + exponente + " = " + resultado);
+    }
+
+    // ======= Método recursivo para potencia =======
+    public static long potenciaRecursiva(int base, int exponente) {
+        if (exponente == 0) {
+            return 1;
+        } else {
+            return base * potenciaRecursiva(base, exponente - 1);
+        }
+    }
+}
